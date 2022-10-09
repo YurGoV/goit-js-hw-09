@@ -18,27 +18,26 @@ refButtonStart.addEventListener('click', onButtonStart);
 refButtonStop.addEventListener('click', onButtonStop);
 
 function onButtonStart(event) {
-    chhangeBackgroundColor()
+    chhangeBackgroundColor();
     intervalId = setInterval(chhangeBackgroundColor, 1000);
-    switchButtonsActivity(true)
+    switchButtonsActivity();
     // body.style.backgroundColor = getRandomHexColor();
     // refButtonStop.disabled = false;
     // refButtonStart.disabled = true;
 };
 
 function onButtonStop() {
-    console.log('ddddd');
     clearInterval(intervalId);
-    changeColorStatus = true;
+    // changeColorStatus = true;
     // chhangeBackgroundColor()
     // setInterval(chhangeBackgroundColor, 1000)
     // body.style.backgroundColor = getRandomHexColor();
     // refButtonStop.disabled = true;
     // refButtonStart.disabled = false;
-    switchButtonsActivity(false);
+    switchButtonsActivity();
 };
 
-function switchButtonsActivity(changeColorStatus) {
+function switchButtonsActivity() {
     // if (changeColorStatus) {
     //     // refButtonStop.setAttribute('disabled', true);
     //     console.log('sss');
@@ -52,6 +51,7 @@ function switchButtonsActivity(changeColorStatus) {
     refButtonStart.disabled = !refButtonStart.disabled;
     // console.log(!refButtonStart.disabled);
     // console.log(refButtonStop.disabled);
+    console.log('buttons activity changed');
 }
 
 function chhangeBackgroundColor() {
