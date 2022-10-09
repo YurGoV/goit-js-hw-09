@@ -67,7 +67,7 @@ console.log(inputDate);
 
 function onStartButtonClick() {
     const intervalId = setInterval(() => {
-        dateToDisplay = inputDate.selectedDates[0] - new Date();
+        const dateToDisplay = inputDate.selectedDates[0] - new Date();
         onDisplay(convertMs(dateToDisplay))
         console.log(inputDate.selectedDates[0] - new Date());
         console.log(convertMs(inputDate.selectedDates[0] - new Date()).seconds);
