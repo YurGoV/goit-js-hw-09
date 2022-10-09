@@ -10,6 +10,7 @@ console.log(body);
 // switchButtonsActivity(false)
 
 refButtonStop.disabled = true;
+let intervalId = NaN;
 // refButtonStart.disabled = false;
 // const changeColorStatus = false;
 // setButtonsActivity()
