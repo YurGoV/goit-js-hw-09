@@ -22,12 +22,13 @@ console.log(refDispleySeconds.textContent);
 
 refStartButton.disabled = true;
 
-
 // console.log('євваа');
 
 const test = 1;
 const res = test.toString().padStart(2, 0);
 console.log(res);
+
+console.log(new Date());
 
 // const choosenDate = NaN;
 
@@ -48,17 +49,22 @@ const options = {
             console.log('222');
         }
         // window.alert('Please choose a date in the future')
-        Notify.failure('Please choose a date in the future');
+        Notify.failure('Please choose a date in the future',
+            {
+                clickToClose: true,
+            },);
+// );
       }
       
       if (selectedDates[0] - new Date() > 0 && refStartButton.disabled === true) {
         refStartButton.disabled = false;
         console.log('111');
         console.log(refStartButton.disabled);
+        // onDisplay(choosenDate);
       } 
 
       console.log(choosenDate.seconds);
-      onDisplay(choosenDate);
+    //   onDisplay(choosenDate);
     },
   };
 
@@ -67,16 +73,38 @@ console.log(inputDate);
 
 function onStartButtonClick() {
     const intervalId = setInterval(() => {
-        const dateToDisplay = inputDate.selectedDates[0] - new Date();
-        onDisplay(convertMs(dateToDisplay))
+        const dateToDisplay = convertMs(inputDate.selectedDates[0] - new Date());
+        console.log(dateToDisplay);
+        // console.log(Object.values(dateToDisplay));
+        // console.log(dateToDisplay[0][0]);
+
+        // onDisplay(dateToDisplay);
+
+        // console.log(inputDate.selectedDates[0] - new Date());
         console.log(inputDate.selectedDates[0] - new Date());
-        console.log(convertMs(inputDate.selectedDates[0] - new Date()).seconds);
-        if (convertMs(inputDate.selectedDates[0] - new Date()).seconds === 0) {
+        console.log(intervalId);
+        // if (inputDate.selectedDates[0] - new Date() <= 999) {
+        if (Object.values(dateToDisplay).every(value => value <= 0)) {//якщо усі значення д/г/ч/хв будуть нулями
             console.log(intervalId);
             console.log(convertMs(inputDate.selectedDates[0] - new Date()));
             clearInterval(intervalId);
             console.log('clearInt');
-        }
+            if (dateToDisplay.seconds < 0) {
+                // refDispleySeconds.textContent  = '00';
+                Notify.failure('You press start after time is over (',
+                {
+                    clickToClose: true,
+                },);
+                
+                refStartButton.disabled = true;
+            }
+        return
+        } /* else {
+            onDisplay(dateToDisplay);
+        } */
+
+        onDisplay(dateToDisplay);
+
     }, 1000)
     // dateToDisplay = inputDate.selectedDates[0] - new Date();
     // onDisplay(convertMs(dateToDisplay))
