@@ -52,6 +52,7 @@ const options = {
         Notify.failure('Please choose a date in the future',
             {
                 clickToClose: true,
+                position: 'center-top',
             },);
 // );
       }
@@ -87,8 +88,11 @@ function onStartButtonClick() {
         if (Object.values(dateToDisplay).every(value => value <= 0)) {//якщо усі значення д/г/ч/хв будуть нулями
             console.log(intervalId);
             console.log(convertMs(inputDate.selectedDates[0] - new Date()));
-            clearInterval(intervalId);
+            clearInterval(intervalId);            
             console.log('clearInt');
+
+            // onDisplay(dateToDisplay);
+
             if (dateToDisplay.seconds < 0) {
                 // refDispleySeconds.textContent  = '00';
                 Notify.failure('You press start after time is over (',
@@ -97,7 +101,9 @@ function onStartButtonClick() {
                 },);
                 
                 refStartButton.disabled = true;
+                return
             }
+            onDisplay(dateToDisplay);
         return
         } /* else {
             onDisplay(dateToDisplay);
