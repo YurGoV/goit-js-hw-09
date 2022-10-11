@@ -2,14 +2,9 @@ import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 const refDelayInput = document.querySelector('form');
 
-
 console.log(refDelayInput);
-console.log('shshsh');
 
 refDelayInput.addEventListener('submit', onSubmitButton)
-
-
-
 
 function onSubmitButton(event) {
   event.preventDefault();
@@ -26,9 +21,7 @@ function onSubmitButton(event) {
 
     console.log(currentDelay);
   };
-  
-
-  
+ 
 }
 
 
@@ -64,7 +57,7 @@ function onSuccess(result) {
   Notify.success(result,
   {
       clickToClose: true,
-      // position: 'center-top',
+      position: 'center-top',
   },);
 }
 
@@ -73,7 +66,7 @@ function onError(result) {
   Notify.failure(result,
   {
       clickToClose: true,
-      // position: 'center-top',
+      position: 'center-top',
   },);
 }
 

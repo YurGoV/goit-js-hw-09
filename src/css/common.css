@@ -16,3 +16,31 @@ img {
   display: block;
   max-width: 100%;
 }
+
+.timer {
+  display: flex;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.field:not(:last-child) {
+  margin-right: 15px;
+}
+
+.value {
+  font-size: 30px;
+}
+
+.timer {
+  margin-top: 15px;
+}
+
+.form {
+display: flex;
+flex-direction: column;
+justify-content: flex-end;
+max-width: 180px;
+margin-left: 20px;
+}
