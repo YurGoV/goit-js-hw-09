@@ -24,8 +24,6 @@ function onSubmitButton(event) {
  
 }
 
-
-
 function createPromise(position, delay) {
     event.preventDefault();
 
