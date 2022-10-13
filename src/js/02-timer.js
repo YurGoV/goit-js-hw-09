@@ -12,56 +12,85 @@ const refDispleyTime = {
     seconds:document.querySelector('span[data-seconds]'),
 };
 
-// let isCounterActive = false;
-refStartButton.disabled = true;
+disactiveButton();
 
 
 const options = {
     enableTime: true,
-    // enableSeconds: true,
     time_24hr: true,
     defaultDate: new Date(),
     minuteIncrement: 1,
     onClose(selectedDates) {
-
-      const choosenDate = convertMs(selectedDates[0] - new Date());
-
-      checkDateAndButton(selectedDates)
+        checkDateAndButton(selectedDates)
     },
   };
 
 
 const inputDate = flatpickr(dateInput, options);
 
-const countdown = {
-    start() {
-
-        const intervalId = setInterval(() => {
-            const dateToDisplay = convertMs(inputDate.selectedDates[0] - new Date());
+class Countdown {
+    constructor({onCount, finishTime, onStart}) {
+        this.intervalId = null;
+        this.onCount = onCount;
+        this.finishTime = finishTime;
+        this.onStart = onStart;
+    }
     
+    start() {
+        const intervalId = setInterval(() => {
+            const dateToDisplay = this.convertMs(this.finishTime.selectedDates[0] - new Date());
+
             // if (inputDate.selectedDates[0] - new Date() <= 999) {
             if (Object.values(dateToDisplay).every(value => value <= 0)) {//якщо усі значення д/г/ч/хв будуть нулями або менше
                 clearInterval(intervalId);            
-                // console.log('clearInt');
     
                 if (dateToDisplay.seconds < 0) {
 
                     onTimeIsOver();
                     return
                 }
-                onCounterDisplay(dateToDisplay);
+                this.onCount(dateToDisplay);
+
             return
             } 
-    
-            onCounterDisplay(dateToDisplay);
+            
+            this.onCount(dateToDisplay);
     
         }, 1000);
 
-        refStartButton.disabled = true;
+        this.onStart();
+       // refStartButton.disabled = true;
     }
+
+    convertMs(ms) {
+        // Number of milliseconds per unit of time
+        const second = 1000;
+        const minute = second * 60;
+        const hour = minute * 60;
+        const day = hour * 24;
+      
+        // Remaining days
+        const days = Math.floor(ms / day);
+        // Remaining hours
+        const hours = Math.floor((ms % day) / hour);
+        // Remaining minutes
+        const minutes = Math.floor(((ms % day) % hour) / minute);
+        // Remaining seconds
+        const seconds = Math.floor((((ms % day) % hour) % minute) / second);
+      
+        return { days, hours, minutes, seconds };
+      };
+
 }
 
-refStartButton.addEventListener('click', countdown.start);
+const countdown = new Countdown({
+    onCount: onCounterDisplay,
+    finishTime: inputDate,
+    onStart: disactiveButton,
+});
+
+
+refStartButton.addEventListener('click', countdown.start.bind(countdown));
 
 function checkDateAndButton (selectedDates) {
     // 
@@ -81,7 +110,6 @@ function checkDateAndButton (selectedDates) {
         refStartButton.disabled = false;
     }
 
-    // console.log(elements);
 };
 
 function onCounterDisplay (dateToDisplay) {
@@ -90,12 +118,15 @@ function onCounterDisplay (dateToDisplay) {
         const currentTimeValue = addLeadingZero(dateToDisplay[key].toString());
         const previousTimeValue = refDispleyTime[key].textContent;
         if (currentTimeValue !== previousTimeValue) {
-        console.log(`записуємо у ДОМ: ${key}: ${currentTimeValue}`);
-        // refDispleyTime[key].textContent = addLeadingZero(dateToDisplay[key].toString());
+        // console.log(`записуємо у ДОМ: ${key}: ${currentTimeValue}`);
         refDispleyTime[key].textContent = currentTimeValue;
         }
     });
 };
+
+function disactiveButton() {
+    refStartButton.disabled = true;
+}
 
 function onTimeIsOver() {
     Notify.failure('You press start after time is over (',
@@ -103,27 +134,8 @@ function onTimeIsOver() {
         clickToClose: true,
         position: 'center-top',
     },);
-    makeOffActivityButton();
+    refStartButton.disabled = true;;
 };
-
-function convertMs(ms) {
-    // Number of milliseconds per unit of time
-    const second = 1000;
-    const minute = second * 60;
-    const hour = minute * 60;
-    const day = hour * 24;
-  
-    // Remaining days
-    const days = Math.floor(ms / day);
-    // Remaining hours
-    const hours = Math.floor((ms % day) / hour);
-    // Remaining minutes
-    const minutes = Math.floor(((ms % day) % hour) / minute);
-    // Remaining seconds
-    const seconds = Math.floor((((ms % day) % hour) % minute) / second);
-  
-    return { days, hours, minutes, seconds };
-  };
 
   function addLeadingZero(value) {
     return value.toString().padStart(2, 0);

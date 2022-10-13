@@ -12,11 +12,9 @@ const refDispleyTime = {
     seconds:document.querySelector('span[data-seconds]'),
 };
 
-// console.log(refDispleyTime);
-
-refStartButton.addEventListener('click', onStartButtonClick);
-
+// let isCounterActive = false;
 refStartButton.disabled = true;
+
 
 const options = {
     enableTime: true,
@@ -28,57 +26,63 @@ const options = {
 
       const choosenDate = convertMs(selectedDates[0] - new Date());
 
-      if (selectedDates[0] - new Date() <= 0) {
+      checkDateAndButton(selectedDates)
+    },
+  };
+
+
+const inputDate = flatpickr(dateInput, options);
+
+const countdown = {
+    start() {
+
+        const intervalId = setInterval(() => {
+            const dateToDisplay = convertMs(inputDate.selectedDates[0] - new Date());
+    
+            // if (inputDate.selectedDates[0] - new Date() <= 999) {
+            if (Object.values(dateToDisplay).every(value => value <= 0)) {//якщо усі значення д/г/ч/хв будуть нулями або менше
+                clearInterval(intervalId);            
+                // console.log('clearInt');
+    
+                if (dateToDisplay.seconds < 0) {
+
+                    onTimeIsOver();
+                    return
+                }
+                onCounterDisplay(dateToDisplay);
+            return
+            } 
+    
+            onCounterDisplay(dateToDisplay);
+    
+        }, 1000);
+
+        refStartButton.disabled = true;
+    }
+}
+
+refStartButton.addEventListener('click', countdown.start);
+
+function checkDateAndButton (selectedDates) {
+    // 
+    if (selectedDates[0] - new Date() <= 0) {
         if (refStartButton.disabled === false) {
             refStartButton.disabled = true;
         }
-        // window.alert('Please choose a date in the future')
+
         Notify.failure('Please choose a date in the future',
             {
                 clickToClose: true,
                 position: 'center-top',
             },);
       }
-      
+
       if (selectedDates[0] - new Date() > 0 && refStartButton.disabled === true) {
         refStartButton.disabled = false;
-      } 
+    }
 
-    },
-  };
-
-const inputDate = flatpickr(dateInput, options);
-
-function onStartButtonClick() {
-    const intervalId = setInterval(() => {
-        const dateToDisplay = convertMs(inputDate.selectedDates[0] - new Date());
-        // console.log(dateToDisplay);
-
-        // if (inputDate.selectedDates[0] - new Date() <= 999) {
-        if (Object.values(dateToDisplay).every(value => value <= 0)) {//якщо усі значення д/г/ч/хв будуть нулями або менше
-            clearInterval(intervalId);            
-            // console.log('clearInt');
-
-            if (dateToDisplay.seconds < 0) {
-                // refDispleySeconds.textContent  = '00';
-                Notify.failure('You press start after time is over (',
-                {
-                    clickToClose: true,
-                    position: 'center-top',
-                },);
-                
-                refStartButton.disabled = true;
-                return
-            }
-            onCounterDisplay(dateToDisplay);
-        return
-        } 
-
-        onCounterDisplay(dateToDisplay);
-
-    }, 1000)
-}
-
+    // console.log(elements);
+};
 
 function onCounterDisplay (dateToDisplay) {
 
@@ -93,6 +97,14 @@ function onCounterDisplay (dateToDisplay) {
     });
 };
 
+function onTimeIsOver() {
+    Notify.failure('You press start after time is over (',
+    {
+        clickToClose: true,
+        position: 'center-top',
+    },);
+    makeOffActivityButton();
+};
 
 function convertMs(ms) {
     // Number of milliseconds per unit of time
